@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AuroraSMS_Android.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Center">
+
+            <Label
+                Text="Configs"
+                SemanticProperties.HeadingLevel="Level1"
+                FontSize="32"
+                HorizontalOptions="Center" />
+
+            <Label
+                Text="Endpoint"
+                SemanticProperties.HeadingLevel="Level2"
+                FontSize="18"
+                HorizontalOptions="Center" />
+            <Entry
+                x:Name="EndpointUrl"
+                Placeholder="https://sms.mariapori.fi"
+                />
+
+            <Label
+                Text="API-Key"
+                SemanticProperties.HeadingLevel="Level2"
+                FontSize="18"
+                HorizontalOptions="Center" />
+            <Entry
+                x:Name="ApiKey"
+                Placeholder="xxx" />
+
+            <Button
+                x:Name="SaveBtn"
+                Text="Save"
+                Clicked="OnSaveBtnClicked"
+                HorizontalOptions="Center" />
+
+            <Button
+                x:Name="StartBtn"
+                Text="Start service"
+                Clicked="StartBtn_Clicked"
+                HorizontalOptions="Center" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
