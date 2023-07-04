@@ -2,10 +2,7 @@ version: '3.4'
 
 services:
   aurorasms:
-    image: ${DOCKER_REGISTRY-}aurorasms
-    build:
-      context: .
-      dockerfile: AuroraSMS/Dockerfile
+    image: mariapori/aurorasms:latest
     environment:
       dbhost: db
       dbdb: AuroraSMS
