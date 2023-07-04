@@ -28,12 +28,22 @@ namespace AuroraSMS.Controllers
             return Ok(unsentMessages);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetStats()
+        {
+            var stats = _db.Messages
+                .Where(o => o.Status == MessageStatus.Sent)
+                .GroupBy(o => o.Created.Date)
+                .ToList();
+            return Ok(stats);
+        }
+
         [HttpPost]
         public async Task<IActionResult> SendMessage(string msg, string to)
         {
             try
             {
-                var message = new AuroraSmsMessage { Message = msg, To = to, Status = MessageStatus.UnSent };
+                var message = new AuroraSmsMessage { Message = msg, To = to, Status = MessageStatus.UnSent, Created = DateTime.Now };
                 await _db.AddAsync(message);
                 await _db.SaveChangesAsync();
                 return Ok(message);

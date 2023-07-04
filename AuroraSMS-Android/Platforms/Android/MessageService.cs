@@ -15,6 +15,7 @@ namespace AuroraSMS_Android.Platforms.Android
         private string NOTIFICATION_CHANNEL_NAME = "notification";
         private const string GetUnsentMessages = "/api/GetUnsentMessages";
         private const string ChangeMessageStatus = "/api/ChangeMessageStatus";
+        public static DateTime LatestFetch = DateTime.MinValue;
 
         private void startForegroundService()
         {
@@ -29,50 +30,57 @@ namespace AuroraSMS_Android.Platforms.Android
             notification.SetAutoCancel(false);
             notification.SetOngoing(true);
             notification.SetSmallIcon(Resource.Mipmap.appicon);
-            notification.SetContentTitle("ForegroundService");
-            notification.SetContentText("Foreground Service is running");
+            notification.SetContentTitle("AuroraSMS Service");
+            notification.SetContentText("AuroraSMS Service is running");
             StartForeground(NOTIFICATION_ID, notification.Build());
 
             Task.Run(async() =>
             {
                 while (true)
                 {
-                    HttpClient httpClient = new HttpClient();
-                    var endpoint = Preferences.Default.Get<string>("endpoint", "");
-                    var apikey = Preferences.Default.Get<string>("apikey", "");
-                    Uri uri = new Uri(endpoint);
-                    httpClient.BaseAddress = uri;
-                    httpClient.DefaultRequestHeaders.Add("X-API-Key", apikey);
-
-                    var response = await httpClient.GetAsync(uri + GetUnsentMessages);
-
-                    if (response.IsSuccessStatusCode)
+                    try
                     {
-                        var messages = await response.Content.ReadFromJsonAsync<List<AuroraSmsMessage>>();
+                        HttpClient httpClient = new HttpClient();
+                        var endpoint = Preferences.Default.Get<string>("endpoint", "");
+                        var apikey = Preferences.Default.Get<string>("apikey", "");
+                        Uri uri = new Uri(endpoint);
+                        httpClient.BaseAddress = uri;
+                        httpClient.DefaultRequestHeaders.Add("X-API-Key", apikey);
 
-                        foreach (var message in messages)
+                        var response = await httpClient.GetAsync(uri + GetUnsentMessages);
+                        LatestFetch = DateTime.Now;
+                        if (response.IsSuccessStatusCode)
                         {
-                            try
+                            var messages = await response.Content.ReadFromJsonAsync<List<AuroraSmsMessage>>();
+
+                            foreach (var message in messages)
                             {
-                                if (Sms.Default.IsComposeSupported)
+                                try
                                 {
-                                    SmsManager smsM = SmsManager.Default;
-                                    smsM.SendTextMessage(message.To, null, message.Message, null, null);
-                                    await httpClient.PostAsync(uri + ChangeMessageStatus + $"?id={message.Id}&newStatus=1",null);
+                                    if (Sms.Default.IsComposeSupported)
+                                    {
+                                        SmsManager smsM = SmsManager.Default;
+                                        smsM.SendTextMessage(message.To, null, message.Message, null, null);
+                                        await httpClient.PostAsync(uri + ChangeMessageStatus + $"?id={message.Id}&newStatus=1", null);
+                                    }
                                 }
-                            }
-                            catch (FeatureNotSupportedException ex)
-                            {
+                                catch (FeatureNotSupportedException ex)
+                                {
 
-                            }
-                            catch (Exception ex)
-                            {
+                                }
+                                catch (Exception ex)
+                                {
 
+                                }
                             }
                         }
                     }
+                    catch
+                    {
 
-                    Thread.Sleep(10000);
+                    }
+                    // Minute
+                    Thread.Sleep(1000 * 60);
                 }
             });
         }
@@ -95,5 +103,11 @@ namespace AuroraSMS_Android.Platforms.Android
             startForegroundService();
             return StartCommandResult.NotSticky;
         }
+
+        public override bool StopService(Intent name)
+        {
+            return base.StopService(name);
+        }
+
     }
 }

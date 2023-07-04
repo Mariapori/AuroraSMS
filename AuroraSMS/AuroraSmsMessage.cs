@@ -7,6 +7,7 @@ namespace AuroraSMS
         public string Message { get; set; } = null!;
         public string To { get; set; } = null!;
         public MessageStatus Status { get; set; } = MessageStatus.Unknown;
+        public DateTime Created { get; set; }
     }
 
     public enum MessageStatus

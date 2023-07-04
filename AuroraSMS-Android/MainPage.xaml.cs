@@ -1,4 +1,5 @@
-﻿using AuroraSMS_Android.Platforms.Android;
+﻿using Android.Widget;
+using AuroraSMS_Android.Platforms.Android;
 
 namespace AuroraSMS_Android
 {
@@ -9,6 +10,7 @@ namespace AuroraSMS_Android
         {
             InitializeComponent();
             LoadUserPreferences();
+            txtFetchtime.Text = $"Latest fetch: {MessageService.LatestFetch:g}";
         }
 
         private void LoadUserPreferences()
@@ -26,9 +28,15 @@ namespace AuroraSMS_Android
         private void StartBtn_Clicked(object sender, EventArgs e)
         {
             Android.Content.Intent intent = new(Android.App.Application.Context, typeof(MessageService));
-#if ANDROID
             Android.App.Application.Context.StartForegroundService(intent);
-#endif
+            Toast.MakeText(Android.App.Application.Context, "Service started.",ToastLength.Short).Show();
+        }
+
+        private void StopBtn_Clicked(object sender, EventArgs e)
+        {
+            Android.Content.Intent intent = new(Android.App.Application.Context, typeof(MessageService));
+            Android.App.Application.Context.StopService(intent);
+            Toast.MakeText(Android.App.Application.Context, "Service stopped.", ToastLength.Short).Show();
         }
     }
 }

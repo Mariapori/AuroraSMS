@@ -46,6 +46,18 @@
                 Clicked="StartBtn_Clicked"
                 HorizontalOptions="Center" />
 
+            <Button
+                x:Name="StopBtn"
+                Text="Stop service"
+                Clicked="StopBtn_Clicked"
+                HorizontalOptions="Center" />
+
+            <Label
+                x:Name="txtFetchtime"
+                SemanticProperties.HeadingLevel="Level2"
+                FontSize="Small"
+                HorizontalOptions="Center" />
+
         </VerticalStackLayout>
     </ScrollView>
 
