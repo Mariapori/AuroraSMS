@@ -10,7 +10,10 @@ namespace AuroraSMS_Android
         {
             InitializeComponent();
             LoadUserPreferences();
-            txtFetchtime.Text = $"Latest fetch: {MessageService.LatestFetch:g}";
+            MessageService.LatestFetchUpdate += (s, d) =>
+            {
+                Application.Current.Dispatcher.Dispatch(() => txtFetchtime.Text = $"Latest fetch: {d:g}");
+            };
         }
 
         private void LoadUserPreferences()
@@ -38,5 +41,6 @@ namespace AuroraSMS_Android
             Android.App.Application.Context.StopService(intent);
             Toast.MakeText(Android.App.Application.Context, "Service stopped.", ToastLength.Short).Show();
         }
+
     }
 }

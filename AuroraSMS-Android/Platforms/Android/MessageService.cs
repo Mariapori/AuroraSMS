@@ -3,6 +3,7 @@ using Android.Content;
 using Android.OS;
 using Android.Telephony;
 using AndroidX.Core.App;
+using System.ComponentModel;
 using System.Net.Http.Json;
 
 namespace AuroraSMS_Android.Platforms.Android
@@ -15,7 +16,9 @@ namespace AuroraSMS_Android.Platforms.Android
         private string NOTIFICATION_CHANNEL_NAME = "notification";
         private const string GetUnsentMessages = "/api/GetUnsentMessages";
         private const string ChangeMessageStatus = "/api/ChangeMessageStatus";
-        public static DateTime LatestFetch = DateTime.MinValue;
+
+        public static EventHandler<DateTime> LatestFetchUpdate;
+        
 
         private void startForegroundService()
         {
@@ -48,7 +51,7 @@ namespace AuroraSMS_Android.Platforms.Android
                         httpClient.DefaultRequestHeaders.Add("X-API-Key", apikey);
 
                         var response = await httpClient.GetAsync(uri + GetUnsentMessages);
-                        LatestFetch = DateTime.Now;
+                        LatestFetchUpdate(null,DateTime.Now);
                         if (response.IsSuccessStatusCode)
                         {
                             var messages = await response.Content.ReadFromJsonAsync<List<AuroraSmsMessage>>();
