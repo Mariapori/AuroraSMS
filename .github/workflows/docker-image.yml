@@ -1,0 +1,26 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Create secret
+      run: echo "${{ secrets.dockertoken }}" > secret.txt
+    - name: Login DockerHub
+      run: cat secret.txt | docker login --username mariapori --password-stdin
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build . AuroraSMS/Dockerfile -t mariapori/aurorasms:latest
+    - name: Push to hub
+      run: docker push mariapori/aurorasms:latest
+    - name: Logout
+      run: docker logout
