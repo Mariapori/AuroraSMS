@@ -13,8 +13,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Create secret
+      run: echo "${{ secrets.dockertoken }}" > secret.txt
     - name: Login DockerHub
-      run: docker login -u mariapori -p ${{ secrets.dockertoken }}
+      run: cat secret.txt | docker login --username mariapori --password-stdin
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker build ./AuroraSMS --file ./AuroraSMS/Dockerfile --tag mariapori/aurorasms:latest
