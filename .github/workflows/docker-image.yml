@@ -1,0 +1,24 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Login DockerHub
+      run: docker login -u mariapori -p ${{ secrets.dockertoken }}
+    - uses: actions/checkout@v3
+    - name: Build the Docker image
+      run: docker build ./AuroraSMS --file ./AuroraSMS/Dockerfile --tag mariapori/aurorasms:latest
+    - name: Push to hub
+      run: docker push mariapori/aurorasms:latest
+    - name: Logout
+      run: docker logout
