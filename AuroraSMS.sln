@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AuroraSMS", "AuroraSMS\Auro
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{C2BA100C-DBCD-4087-BA13-7E79EDF4EAF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuroraSMS-Android", "..\AuroraSMS-Android\AuroraSMS-Android.csproj", "{60565896-88B6-4738-88CC-9584E96FBAC9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuroraSMS-Android", "..\AuroraSMS\AuroraSMS-Android\AuroraSMS-Android.csproj", "{60565896-88B6-4738-88CC-9584E96FBAC9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
